@@ -57,6 +57,7 @@ const getUserById = async (userId) => {
         id,
         email,
         user_name userName,
+        cellphone,
         profile_image_url profileImageUrl,
         sex,
         bio
@@ -91,7 +92,6 @@ const editUserInfo = async (userId, userName, cellphone, sex, bio) => {
 
 const uploadImageUrl = async (userId, profileImageUrl) => {
   try {
-    console.log(profileImageUrl)
     if (profileImageUrl) {
       await dataSource.query(
         `UPDATE users
@@ -123,6 +123,7 @@ const getOtherUser = async (userId) => {
         id,
         email,
         user_name userName,
+        cellphone,
         profile_image_url profileImageUrl,
         sex,
         bio
