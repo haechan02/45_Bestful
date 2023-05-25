@@ -32,5 +32,5 @@ module.exports = {
   catchAsync,
   DatabaseError,
   globalErrorHandler,
-  DatabaseError
+  BaseError
 };
