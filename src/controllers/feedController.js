@@ -21,4 +21,8 @@ const getAllFeedCreatedAt = catchAsync(async (req, res) => {
   return res.status(200).json(result);
 });
 
+const feedUpload = catchAsync(async (req, res) => {
+
+})
+
 module.exports = { getAllFeedCreatedAt };

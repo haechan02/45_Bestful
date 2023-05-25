@@ -5,8 +5,8 @@ const userController = require('../controllers/userController');
 const router = express.Router();
 
 router.post('/kakaologin', userController.signInKakao);
-router.get('/', checkLogInToken, userController.getUserById);
-router.patch('/edit', checkLogInToken, userController.editUserInfo);
-router.patch('/image', checkLogInToken, userController.uploadImageUrl)
+router.get('/', userController.getUserById);
+router.patch('/edit', userController.editUserInfo);
+router.patch('/image', userController.uploadImageUrl)
 
 module.exports = { router };
