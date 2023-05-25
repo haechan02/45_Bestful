@@ -64,9 +64,14 @@ const uploadImageUrl = async (userId, profileImageUrl) => {
   }
 };
 
+const getOtherUser = async (userId) => {
+  return await userDao.getOtherUser(userId);
+};
+
 module.exports = {
   signInKakao,
   getUserById,
   editUserInfo,
-  uploadImageUrl
+  uploadImageUrl,
+  getOtherUser
 };
