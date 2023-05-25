@@ -57,6 +57,7 @@ const getUserById = async (userId) => {
         id,
         email,
         user_name userName,
+        cellphone,
         profile_image_url profileImageUrl,
         sex,
         bio
@@ -91,7 +92,6 @@ const editUserInfo = async (userId, userName, cellphone, sex, bio) => {
 
 const uploadImageUrl = async (userId, profileImageUrl) => {
   try {
-    console.log(profileImageUrl)
     if (profileImageUrl) {
       await dataSource.query(
         `UPDATE users
@@ -115,11 +115,35 @@ const uploadImageUrl = async (userId, profileImageUrl) => {
   }
 };
 
+const getOtherUser = async (userId) => {
+  try {
+    const [user] = await dataSource.query(
+      `
+      SELECT
+        id,
+        email,
+        user_name userName,
+        cellphone,
+        profile_image_url profileImageUrl,
+        sex,
+        bio
+      FROM users
+      WHERE id = ?
+      `,
+      [userId]
+    );
+    return user;
+  } catch (error) {
+    throw new DatabaseError('DataSource_Error');
+  }
+};
+
 
 module.exports = {
   getUserByKakaoId,
   getUserById,
   createUser,
   editUserInfo,
-  uploadImageUrl
+  uploadImageUrl,
+  getOtherUser
 };

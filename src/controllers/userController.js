@@ -58,10 +58,17 @@ const uploadImageUrl = async (req, res) => {
   }
 };
 
+const getOtherUser = catchAsync(async (req, res) => {
+  const userId = req.params.userId;
+  const userInfo = await userService.getOtherUser(userId);
+
+  return res.status(200).json(userInfo);
+});
 
 module.exports = {
   signInKakao,
   getUserById,
   editUserInfo,
-  uploadImageUrl
+  uploadImageUrl,
+  getOtherUser
 };
