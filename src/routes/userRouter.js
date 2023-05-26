@@ -1,6 +1,7 @@
 const express = require('express');
 const checkLogInToken = require('../utils/auth');
 const userController = require('../controllers/userController');
+const { upload } = require('../utils/s3');
 
 const { upload } = require('../utils/s3')
 

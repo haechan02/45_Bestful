@@ -1,7 +1,7 @@
-const feedService = require('../services/feedService');
+const bestService = require('../services/bestService');
 const { catchAsync } = require('../utils/error');
 
-const getAllFeed = catchAsync(async (req, res) => {
+const getBestFeed = catchAsync(async (req, res) => {
   const { from, count, genderId, seasonId, styleId } = req.query;
 
   const DEFAULT_LIMIT = 6;
@@ -10,7 +10,7 @@ const getAllFeed = catchAsync(async (req, res) => {
   const offset = from ? from : DEFAULT_OFFSET;
   const limit = count ? count : DEFAULT_LIMIT;
 
-  const result = await feedService.getAllFeed(
+  const result = await bestService.getBestFeed(
     offset,
     limit,
     genderId,
@@ -21,6 +21,4 @@ const getAllFeed = catchAsync(async (req, res) => {
   return res.status(200).json(result);
 });
 
-const feedUpload = catchAsync(async (req, res) => {});
-
-module.exports = { getAllFeed };
+module.exports = { getBestFeed };
