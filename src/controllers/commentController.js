@@ -11,6 +11,18 @@ const getCommentByFeedId = catchAsync(async (req, res) => {
   return res.status(200).json(result);
 });
 
+const addComment = catchAsync(async (req, res) => {
+  const { userId, feedId, contents } = req.body;
+  console.log(userId, feedId, contents);
+
+  if (!userId || !feedId || !contents) throw new BaseError(401, 'EMPTY_KEY');
+
+  await commentService.addComment(userId, feedId, contents);
+
+  return res.status(200).json({ message: 'ADD_COMMENT' });
+});
+
 module.exports = {
   getCommentByFeedId,
+  addComment,
 };

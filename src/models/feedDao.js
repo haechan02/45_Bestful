@@ -2,13 +2,13 @@ const { DatabaseError } = require('../utils/error');
 const dataSource = require('./dataSource');
 const builder = require('./builder');
 
-const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
+const getAllFeed = async (offset, limit, genderId, seasonId, styleId, orderBy, userId) => {
   try {
     const baseQuery = `
       SELECT
       subq.feedId,
       subq.userName,
-      subq.profile_image_url,
+      subq.profileImageUrl,
       subq.feedDescription,
       subq.createdAt,
       subq.likesCount,
@@ -41,7 +41,7 @@ const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
             SELECT
                 f.id AS feedId,
                 u.user_name AS userName,
-                u.profile_image_url,
+                u.profile_image_url profileImageUrl,
                 f.description AS feedDescription,
                 DATE_FORMAT(f.created_at, '%Y.%m.%d') AS createdAt,
                 c_f.content_url AS contentUrl,
@@ -57,8 +57,8 @@ const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
             JOIN styles sty ON c.style_id = sty.id  
         `;
 
-    const whereCondition = builder.filterBuilder(genderId, seasonId, styleId);
-    const sortQuery = `ORDER BY subq.createdAt DESC`;
+    const whereCondition = builder.filterBuilder(genderId, seasonId, styleId, userId);
+    const sortQuery = builder.orderByBuilder(orderBy);
     const limitQuery = builder.limitBuilder(offset, limit);
     const groupByQuery = ` 
     GROUP BY 
@@ -73,14 +73,13 @@ const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
     GROUP BY 
     subq.feedId, 
     subq.userName, 
-    subq.profile_image_url, 
+    subq.profileImageUrl, 
     subq.feedDescription, 
     subq.createdAt,
     subq.likesCount`;
 
-    const rooms = await dataSource.query(
-      `${baseQuery} ${whereCondition} ${groupByQuery} ${sortQuery} ${limitQuery}`
-    );
+    const rooms = await dataSource.query(`${baseQuery} ${whereCondition} ${groupByQuery} ${sortQuery} ${limitQuery}`);
+
     return rooms;
   } catch (error) {
     console.log(error);
@@ -88,31 +87,6 @@ const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
   }
 };
 
-const getSeasons = async () => {
-  try {
-    const query = 'SELECT * FROM seasons';
-    const seasons = await dataSource.query(query);
-    return seasons;
-  } catch (error) {
-    console.log(error);
-    throw new DatabaseError('CAN_NOT_GET_SEASONS');
-  }
-};
-
-const getStyles = async () => {
-  try {
-    const query = 'SELECT * FROM styles';
-    const styles = await dataSource.query(query);
-    return styles;
-  } catch (error) {
-    console.log(error);
-    throw new DatabaseError('CAN_NOT_GET_STYLES');
-  }
-};
-
-
 module.exports = {
   getAllFeed,
-  getSeasons,
-  getStyles
 };

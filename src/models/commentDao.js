@@ -1,4 +1,5 @@
 const dataSource = require('../models/dataSource');
+const { use } = require('../routes');
 const { DatabaseError } = require('../utils/error');
 
 const getCommentByFeedId = async (feedId) => {
@@ -24,6 +25,59 @@ const getCommentByFeedId = async (feedId) => {
   }
 };
 
+const addComment = async (userId, feedId, content) => {
+  const queryRunner = dataSource.createQueryRunner();
+
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+
+  try {
+    const user = await queryRunner.query(
+      `
+      SELECT id FROM users WHERE id = ?
+    `,
+      [userId]
+    );
+
+    if (!user || user.length === 0) {
+      throw new DatabaseError('USER_NOT_FOUND');
+    }
+
+    const commentId = await queryRunner.query(
+      `
+      INSERT INTO comments(
+        user_id,
+        feed_id,
+        contents
+      ) VALUES (?, ?, ?)
+    `,
+      [user[0].id, feedId, content]
+    );
+
+    const parentsId = commentId.insertId;
+
+    await queryRunner.query(
+      `
+      UPDATE comments
+      SET parents_id = ?
+      WHERE id = ?
+    `,
+      [parentsId, parentsId]
+    );
+
+    await queryRunner.commitTransaction();
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    await queryRunner.rollbackTransaction();
+    throw new DatabaseError('DATASOURCE ERROR');
+  } finally {
+    await queryRunner.release();
+  }
+};
+
 module.exports = {
   getCommentByFeedId,
+  addComment,
 };
