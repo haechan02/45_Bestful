@@ -2,7 +2,7 @@ const { DatabaseError } = require('../utils/error');
 const dataSource = require('./dataSource');
 const builder = require('./builder');
 
-const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
+const getBestFeed = async (offset, limit, genderId, seasonId, styleId) => {
   try {
     const baseQuery = `
       SELECT
@@ -58,7 +58,7 @@ const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
         `;
 
     const whereCondition = builder.filterBuilder(genderId, seasonId, styleId);
-    const sortQuery = `ORDER BY subq.createdAt DESC`;
+    const sortQuery = `ORDER BY subq.likesCount DESC`;
     const limitQuery = builder.limitBuilder(offset, limit);
     const groupByQuery = ` 
     GROUP BY 
@@ -81,6 +81,7 @@ const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
     const rooms = await dataSource.query(
       `${baseQuery} ${whereCondition} ${groupByQuery} ${sortQuery} ${limitQuery}`
     );
+
     return rooms;
   } catch (error) {
     console.log(error);
@@ -89,5 +90,5 @@ const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
 };
 
 module.exports = {
-  getAllFeed,
+  getBestFeed,
 };
