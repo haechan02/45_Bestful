@@ -35,11 +35,10 @@ const getFollowers = async (userId) => {
     const query = `
       SELECT
         users.id,
-        users.kakao_id,
         users.email,
-        users.user_name,
+        users.user_name userName,
         users.cellphone,
-        users.profile_image_url,
+        users.profile_image_url profileImage,
         users.sex,
         users.bio,
         users.created_at,
@@ -68,11 +67,10 @@ const getFollowings = async (userId) => {
     const query = `
       SELECT
         users.id,
-        users.kakao_id,
         users.email,
-        users.user_name,
+        users.user_name userName,
         users.cellphone,
-        users.profile_image_url,
+        users.profile_image_url profileImage,
         users.sex,
         users.bio,
         users.created_at,
