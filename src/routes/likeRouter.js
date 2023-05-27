@@ -4,6 +4,7 @@ const likeController = require('../controllers/likeController');
 
 const router = express.Router();
 
-router.post('/', likeController.likeFeeds);
+router.post('/:feedId', checkLogInToken, likeController.likeFeeds);
+router.delete('/:feedId', checkLogInToken, likeController.unlikeFeeds);
 
 module.exports = { router };

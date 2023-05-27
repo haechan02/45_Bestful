@@ -1,16 +1,25 @@
 const likeDao = require('../models/likeDao');
 const { BaseError } = require('../utils/error');
 
-const createLike = async (user_id, feed_id) => {
+const createLike = async (userId, feedId) => {
   try {
-    // Create the like using the DAO
-    const like = await likeDao.createLike(user_id, feed_id);
+    const like = await likeDao.createLike(userId, feedId);
     return like;
   } catch (error) {
     throw new BaseError('Failed to create like.', 500);
   }
 };
 
+const removeLike = async (userId, feedId) => {
+  try {
+    const like = await likeDao.removeLike(userId, feedId);
+    return like;
+  } catch (error) {
+    throw new BaseError('Failed to remove like.', 500);
+  }
+};
+
 module.exports = {
-  createLike
+  createLike,
+  removeLike
 };
