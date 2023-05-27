@@ -88,6 +88,19 @@ const getAllFeed = async (offset, limit, genderId, seasonId, styleId) => {
   }
 };
 
+const getSeasons = async () => {
+  try {
+    const query = 'SELECT * FROM seasons';
+    const seasons = await dataSource.query(query);
+    return seasons;
+  } catch (error) {
+    console.log(error);
+    throw new DatabaseError('CAN_NOT_GET_SEASONS');
+  }
+};
+
+
 module.exports = {
   getAllFeed,
+  getSeasons
 };
