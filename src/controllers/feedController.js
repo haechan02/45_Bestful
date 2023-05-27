@@ -21,6 +21,14 @@ const getAllFeed = catchAsync(async (req, res) => {
   return res.status(200).json(result);
 });
 
-const feedUpload = catchAsync(async (req, res) => {});
+const feedUpload = catchAsync(async (req, res) => { });
 
-module.exports = { getAllFeed };
+const getSeasons = catchAsync(async (req, res) => {
+  const seasons = await feedService.getSeasons();
+  return res.status(200).json(seasons);
+});
+
+module.exports = {
+  getAllFeed,
+  getSeasons
+};
