@@ -11,5 +11,6 @@ router.get('/:feedId/comment', commentController.getCommentByFeedId);
 router.get('/best', bestController.getBestFeed);
 router.get('/:userId/followings', follwerController.getFeedFollowings);
 router.get('/seasons', feedController.getSeasons);
+router.get('/styles', feedController.getStyles);
 
 module.exports = { router };

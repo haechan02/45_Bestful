@@ -28,7 +28,13 @@ const getSeasons = catchAsync(async (req, res) => {
   return res.status(200).json(seasons);
 });
 
+const getStyles = catchAsync(async (req, res) => {
+  const styles = await feedService.getStyles();
+  return res.status(200).json(styles);
+});
+
 module.exports = {
   getAllFeed,
-  getSeasons
+  getSeasons,
+  getStyles
 };

@@ -8,7 +8,12 @@ const getSeasons = async () => {
   return await feedDao.getSeasons();
 };
 
+const getStyles = async () => {
+  return await feedDao.getStyles();
+};
+
 module.exports = {
   getAllFeed,
-  getSeasons
+  getSeasons,
+  getStyles
 };

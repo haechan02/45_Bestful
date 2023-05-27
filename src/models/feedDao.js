@@ -99,8 +99,20 @@ const getSeasons = async () => {
   }
 };
 
+const getStyles = async () => {
+  try {
+    const query = 'SELECT * FROM styles';
+    const styles = await dataSource.query(query);
+    return styles;
+  } catch (error) {
+    console.log(error);
+    throw new DatabaseError('CAN_NOT_GET_STYLES');
+  }
+};
+
 
 module.exports = {
   getAllFeed,
-  getSeasons
+  getSeasons,
+  getStyles
 };
