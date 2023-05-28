@@ -7,6 +7,7 @@ const follwerController = require('../controllers/followerController');
 const auth = require('../utils/auth');
 
 router.get('', feedController.getAllFeed);
+router.get('/followings', auth, feedController.getAllFeedFollowings);
 router.get('/:feedId/comment', commentController.getCommentByFeedId);
 router.get('/best', bestController.getBestFeed);
 router.get('/:userId/followings', follwerController.getFeedFollowings);

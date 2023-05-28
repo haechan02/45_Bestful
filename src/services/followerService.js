@@ -49,28 +49,9 @@ const getFollowings = async (userId) => {
   }
 };
 
-const getFeedFollowings = async (
-  offset,
-  limit,
-  genderId,
-  seasonId,
-  styleId,
-  userId
-) => {
-  return await followerDao.getFeedFollowings(
-    offset,
-    limit,
-    genderId,
-    seasonId,
-    styleId,
-    userId
-  );
-};
-
 module.exports = {
   followUser,
   unfollowUser,
   getFollowers,
   getFollowings,
-  getFeedFollowings,
 };

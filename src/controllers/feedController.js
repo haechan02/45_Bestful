@@ -10,18 +10,28 @@ const getAllFeed = catchAsync(async (req, res) => {
   const offset = from ? from : DEFAULT_OFFSET;
   const limit = count ? count : DEFAULT_LIMIT;
 
-  const result = await feedService.getAllFeed(
-    offset,
-    limit,
-    genderId,
-    seasonId,
-    styleId
-  );
+  const result = await feedService.getAllFeed(offset, limit, genderId, seasonId, styleId);
 
   return res.status(200).json(result);
 });
 
-const feedUpload = catchAsync(async (req, res) => { });
+const getAllFeedFollowings = catchAsync(async (req, res) => {
+  const { from, count, genderId, seasonId, styleId, orderBy } = req.query;
+  const userId = req.user.id;
+
+  const DEFAULT_LIMIT = 3;
+
+  const DEFAULT_OFFSET = 0;
+
+  const offset = from ? from : DEFAULT_OFFSET;
+  const limit = count ? count : DEFAULT_LIMIT;
+
+  const result = await feedService.getAllFeed(offset, limit, genderId, seasonId, styleId, orderBy, userId);
+
+  return res.status(200).json(result);
+});
+
+const feedUpload = catchAsync(async (req, res) => {});
 
 const getSeasons = catchAsync(async (req, res) => {
   const seasons = await feedService.getSeasons();
@@ -35,6 +45,7 @@ const getStyles = catchAsync(async (req, res) => {
 
 module.exports = {
   getAllFeed,
+  getAllFeedFollowings,
   getSeasons,
-  getStyles
+  getStyles,
 };
