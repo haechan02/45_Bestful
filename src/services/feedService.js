@@ -1,7 +1,33 @@
 const feedDao = require('../models/feedDao');
 
-const getAllFeed = async (offset, limit, genderId, seasonId, styleId, orderBy, userId) => {
-  return await feedDao.getAllFeed(offset, limit, genderId, seasonId, styleId, orderBy, userId);
+const getAllFeed = async (
+  feedId,
+  targetUserId,
+  selectedUserId,
+  offset,
+  limit,
+  genderId,
+  seasonId,
+  styleId,
+  orderBy,
+  userId
+) => {
+  return await feedDao.getAllFeed(
+    feedId,
+    targetUserId,
+    selectedUserId,
+    offset,
+    limit,
+    genderId,
+    seasonId,
+    styleId,
+    orderBy,
+    userId
+  );
+};
+
+module.exports = {
+  getAllFeed,
 };
 
 const getSeasons = async () => {

@@ -7,10 +7,13 @@ const follwerController = require('../controllers/followerController');
 const auth = require('../utils/auth');
 
 router.get('', feedController.getAllFeed);
+router.get('/best', feedController.getAllFeed);
+router.get('/:feedId', feedController.getAllFeed);
+router.get('/users/:targetUserId', feedController.getAllFeed);
+router.get('/likes/:selectedUserId', feedController.getAllFeed);
 router.get('/followings', auth, feedController.getAllFeedFollowings);
 router.get('/:feedId/comment', commentController.getCommentByFeedId);
-router.get('/best', bestController.getBestFeed);
-router.get('/:userId/followings', follwerController.getFeedFollowings);
+
 router.get('/seasons', feedController.getSeasons);
 router.get('/styles', feedController.getStyles);
 
