@@ -109,6 +109,36 @@ const getAllFeed = async (
   }
 };
 
+const uploadFeed = async (userId, description) => {
+  try {
+    const result = await dataSource.query(
+      `INSERT INTO feed (user_id, description) VALUES (?, ?)`,
+      [userId, description]
+    );
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw new DatabaseError('CAN_NOT_UPLOAD_FEED');
+  }
+};
+
+const deleteFeed = async (feedId) => {
+  const result = await dataSource.query('DELETE FROM feed WHERE id = ?', [feedId]);
+  return result;
+};
+
+const getFeedById = async (feedId) => {
+  const feed = await dataSource.query('SELECT * FROM feed WHERE id = ?', [feedId]);
+  if (feed.length > 0) {
+    return feed[0];
+  }
+  return null;
+};
+
 module.exports = {
   getAllFeed,
+  uploadFeed,
+  deleteFeed,
+  getFeedById
 };
