@@ -12,10 +12,10 @@ const getCommentByFeedId = catchAsync(async (req, res) => {
 });
 
 const addComment = catchAsync(async (req, res) => {
-  const { userId, feedId, contents } = req.body;
-  console.log(userId, feedId, contents);
+  const userId = req.user.id;
+  const { feedId, contents } = req.body;
 
-  if (!userId || !feedId || !contents) throw new BaseError(401, 'EMPTY_KEY');
+  if (!userId || !feedId || !contents) throw new BaseError(400, 'EMPTY_KEY');
 
   await commentService.addComment(userId, feedId, contents);
 
@@ -23,7 +23,7 @@ const addComment = catchAsync(async (req, res) => {
 });
 
 const deleteComment = catchAsync(async (req, res) => {
-  const userId = req.params.userId;
+  const userId = req.user.id;
   const { feedId, commentId } = req.body;
 
   if (!userId || !feedId || !commentId) throw new BaseError(401, 'EMPTY_KEY');
