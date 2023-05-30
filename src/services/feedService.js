@@ -26,14 +26,6 @@ const getAllFeed = async (
   );
 };
 
-const getSeasons = async () => {
-  return await feedDao.getSeasons();
-};
-
-const getStyles = async () => {
-  return await feedDao.getStyles();
-};
-
 const uploadFeed = async (userId, description) => {
   return await feedDao.uploadFeed(userId, description);
 };
@@ -51,11 +43,8 @@ const deleteFeed = async (feedId, userId) => {
   return { message: 'Feed successfully deleted.' };
 };
 
-
 module.exports = {
   getAllFeed,
-  getSeasons,
-  getStyles,
   uploadFeed,
-  deleteFeed
+  deleteFeed,
 };

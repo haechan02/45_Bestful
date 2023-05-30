@@ -43,16 +43,6 @@ const getAllFeedFollowings = catchAsync(async (req, res) => {
   return res.status(200).json(result);
 });
 
-const getSeasons = catchAsync(async (req, res) => {
-  const seasons = await feedService.getSeasons();
-  return res.status(200).json(seasons);
-});
-
-const getStyles = catchAsync(async (req, res) => {
-  const styles = await feedService.getStyles();
-  return res.status(200).json(styles);
-});
-
 const uploadFeed = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const { description } = req.body;
@@ -68,7 +58,7 @@ const deleteFeed = catchAsync(async (req, res) => {
 
   try {
     await feedService.deleteFeed(feedId, userId);
-    return res.status(200).json({ message: "Feed deleted successfully." });
+    return res.status(200).json({ message: 'Feed deleted successfully.' });
   } catch (error) {
     if (error.message === 'Post does not exist') {
       return res.status(404).json({ message: error.message });
@@ -81,8 +71,6 @@ const deleteFeed = catchAsync(async (req, res) => {
 module.exports = {
   getAllFeed,
   getAllFeedFollowings,
-  getSeasons,
-  getStyles,
   uploadFeed,
-  deleteFeed
+  deleteFeed,
 };

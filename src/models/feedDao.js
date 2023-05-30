@@ -18,6 +18,7 @@ const getAllFeed = async (
     const baseQuery = `
       SELECT
       subq.userId,
+      subq.userId,
       subq.feedId,
       subq.userName,
       subq.profileImageUrl,
@@ -111,10 +112,10 @@ const getAllFeed = async (
 
 const uploadFeed = async (userId, description) => {
   try {
-    const result = await dataSource.query(
-      `INSERT INTO feed (user_id, description) VALUES (?, ?)`,
-      [userId, description]
-    );
+    const result = await dataSource.query(`INSERT INTO feed (user_id, description) VALUES (?, ?)`, [
+      userId,
+      description,
+    ]);
 
     return result;
   } catch (error) {
@@ -140,5 +141,5 @@ module.exports = {
   getAllFeed,
   uploadFeed,
   deleteFeed,
-  getFeedById
+  getFeedById,
 };
