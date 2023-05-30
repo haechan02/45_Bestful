@@ -3,6 +3,7 @@ const dataSource = require('./dataSource');
 const builder = require('./builder');
 
 const getAllFeed = async (
+  userId,
   feedId,
   targetUserId,
   selectedUserId,
@@ -11,8 +12,7 @@ const getAllFeed = async (
   genderId,
   seasonId,
   styleId,
-  orderBy,
-  userId
+  orderBy
 ) => {
   try {
     const baseQuery = `
