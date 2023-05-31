@@ -2,22 +2,10 @@ const { DatabaseError } = require('../utils/error');
 const dataSource = require('./dataSource');
 const builder = require('./builder');
 
-const getAllFeed = async (
-  userId,
-  feedId,
-  targetUserId,
-  selectedUserId,
-  offset,
-  limit,
-  genderId,
-  seasonId,
-  styleId,
-  orderBy
-) => {
+const getAllFeed = async (userId, feedId, targetUserId, selectedUserId, offset, limit, genderId, seasonId, styleId, orderBy) => {
   try {
     const baseQuery = `
       SELECT
-      subq.userId,
       subq.userId,
       subq.feedId,
       subq.userName,
@@ -65,21 +53,13 @@ const getAllFeed = async (
             JOIN users u ON u.id = f.user_id
             JOIN content_files c_f ON c_f.feed_id = f.id
             LEFT JOIN likes l ON l.feed_id = f.id
-            JOIN tags t ON c_f.id = t.content_file_id
-            JOIN clothes c ON t.cloth_id = c.id
-            JOIN seasons sea ON c.season_id = sea.id
-            JOIN styles sty ON c.style_id = sty.id  
+            LEFT JOIN tags t ON c_f.id = t.content_file_id
+            LEFT JOIN clothes c ON t.cloth_id = c.id
+            LEFT JOIN seasons sea ON c.season_id = sea.id
+            LEFT JOIN styles sty ON c.style_id = sty.id  
         `;
 
-    const whereCondition = builder.filterBuilder(
-      genderId,
-      seasonId,
-      styleId,
-      userId,
-      feedId,
-      targetUserId,
-      selectedUserId
-    );
+    const whereCondition = builder.filterBuilder(genderId, seasonId, styleId, userId, feedId, targetUserId, selectedUserId);
     const sortQuery = builder.orderByBuilder(orderBy);
     const limitQuery = builder.limitBuilder(offset, limit);
     const groupByQuery = ` 
@@ -110,17 +90,72 @@ const getAllFeed = async (
   }
 };
 
-const uploadFeed = async (userId, description) => {
+const uploadFeed = async (userId, feedDescription) => {
   try {
-    const result = await dataSource.query(`INSERT INTO feed (user_id, description) VALUES (?, ?)`, [
-      userId,
-      description,
-    ]);
+    const resultFeed = await dataSource.query(`INSERT INTO feed (user_id, description) VALUES (?, ?)`, [userId, feedDescription]);
+    const feedId = resultFeed.insertId;
 
-    return result;
+    return { feedId };
   } catch (error) {
     console.log(error);
     throw new DatabaseError('CAN_NOT_UPLOAD_FEED');
+  }
+};
+
+const uploadContentFile = async (feedId, contentUrl) => {
+  try {
+    const resultContentFile = await dataSource.query(`INSERT INTO content_files (feed_id, content_url) VALUES (?, ?)`, [feedId, contentUrl]);
+    const contentFileId = resultContentFile.insertId;
+
+    return { contentFileId };
+  } catch (error) {
+    throw new DatabaseError('CAN_NOT_UPLOAD_CONTENT_FILE');
+  }
+};
+
+const createTag = async (
+  contentFileId,
+  clothName,
+  clothPrice,
+  tagContent,
+  coordinateX,
+  coordinateY,
+  clothBuyingLink,
+  clothInformation,
+  styleName,
+  seasonName
+) => {
+  try {
+    const [style] = await dataSource.query(
+      `
+      SELECT id FROM styles WHERE style = ?
+    `,
+      [styleName]
+    );
+
+    const [season] = await dataSource.query(
+      `
+      SELECT id FROM seasons WHERE seasons = ?
+    `,
+      [seasonName]
+    );
+
+    if (!style | !season) throw new Error();
+
+    const result = await dataSource.query(
+      `INSERT INTO clothes (name, price, buying_link, information, style_id, season_id) 
+        VALUES (?, ?, ?, ?, ?, ?)`,
+      [clothName, clothPrice, clothBuyingLink, clothInformation, style.id, season.id]
+    );
+
+    await dataSource.query(
+      `INSERT INTO tags (content_file_id, cloth_id, coordinate_x, coordinate_y, contents) 
+        VALUES (?, ?, ?, ?, ?)`,
+      [contentFileId, result.insertId, coordinateX, coordinateY, tagContent]
+    );
+  } catch (error) {
+    console.log(error);
+    throw new DatabaseError('CAN_NOT_CREATE_TAG');
   }
 };
 
@@ -129,17 +164,10 @@ const deleteFeed = async (feedId) => {
   return result;
 };
 
-const getFeedById = async (feedId) => {
-  const feed = await dataSource.query('SELECT * FROM feed WHERE id = ?', [feedId]);
-  if (feed.length > 0) {
-    return feed[0];
-  }
-  return null;
-};
-
 module.exports = {
   getAllFeed,
   uploadFeed,
+  uploadContentFile,
+  createTag,
   deleteFeed,
-  getFeedById,
 };

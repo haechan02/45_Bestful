@@ -24,7 +24,9 @@ const unfollowUser = async (req, res, next) => {
 };
 
 const getFollowers = async (req, res, next) => {
-  const userId = req.user.id;
+  // const userId = req.user.id;
+  const { userId } = req.params;
+  console.log(userId);
 
   try {
     const followers = await followerService.getFollowers(userId);
@@ -35,7 +37,9 @@ const getFollowers = async (req, res, next) => {
 };
 
 const getFollowings = async (req, res, next) => {
-  const userId = req.user.id;
+  // const userId = req.user.id;
+  const { userId } = req.params;
+  console.log(userId);
 
   try {
     const followings = await followerService.getFollowings(userId);
