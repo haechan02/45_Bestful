@@ -2,7 +2,8 @@ const followerService = require('../services/followerService');
 const { catchAsync, BaseError } = require('../utils/error');
 
 const followUser = async (req, res, next) => {
-  const { userId, followedId } = req.body;
+  const userId = req.user.id;
+  const { followedId } = req.body;
 
   try {
     const result = await followerService.followUser(userId, followedId);
@@ -13,7 +14,8 @@ const followUser = async (req, res, next) => {
 };
 
 const unfollowUser = async (req, res, next) => {
-  const { userId, followedId } = req.body;
+  const userId = req.user.id;
+  const { followedId } = req.body;
 
   try {
     const result = await followerService.unfollowUser(userId, followedId);
