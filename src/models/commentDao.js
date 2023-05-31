@@ -7,6 +7,7 @@ const getCommentByFeedId = async (feedId) => {
     return await dataSource.query(
       `
       SELECT
+      c.id,
       c.contents,
       u.user_name,
       u.profile_image_url,
