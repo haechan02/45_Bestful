@@ -1,7 +1,6 @@
 const express = require('express');
+const { checkLogInToken } = require('../utils/auth');
 const followerController = require('../controllers/followerController');
-const checkLogInToken = require('../utils/auth');
-const { catchAsync } = require('../utils/error');
 
 const router = express.Router();
 
@@ -10,6 +9,4 @@ router.delete('/', checkLogInToken, followerController.unfollowUser);
 router.get('/:userId', checkLogInToken, followerController.getFollowers);
 router.get('/following/:userId', checkLogInToken, followerController.getFollowings);
 
-module.exports = {
-  router,
-};
+module.exports = { router };
