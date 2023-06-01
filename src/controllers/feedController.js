@@ -18,30 +18,40 @@ const getAllFeed = catchAsync(async (req, res) => {
   return res.status(200).json(result);
 });
 
-const uploadFeed = catchAsync(async (req, res) => {
+const uploadFeed = async (req, res, next) => {
   const userId = req.user.id;
-  const { description } = req.body;
+  const { feedDescription } = req.body;
+  const feedInfo = JSON.parse(req.body.feedInfo);
 
-  const result = await feedService.uploadFeed(userId, description);
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ message: 'No files uploaded.' });
+  }
 
-  return res.status(201).json({ feed: result });
-});
+  const contentUrls = req.files.map((file) => file.location);
 
-const deleteFeed = catchAsync(async (req, res) => {
-  const { feedId } = req.params;
-  const userId = req.user.id;
+  if (!contentUrls || contentUrls.length === 0) {
+    return res.status(400).json({ message: 'No content URLs extracted.' });
+  }
 
   try {
-    await feedService.deleteFeed(feedId, userId);
-    return res.status(200).json({ message: 'Feed deleted successfully.' });
+    await feedService.uploadFeed(userId, feedDescription, contentUrls, feedInfo);
+    res.status(201).json({ message: 'Feed uploaded successfully.' });
   } catch (error) {
-    if (error.message === 'Post does not exist') {
-      return res.status(404).json({ message: error.message });
-    } else if (error.message === 'User does not match the post id') {
-      return res.status(403).json({ message: error.message });
-    }
+    next(error);
   }
-});
+};
+
+const deleteFeed = async (userId, feedId) => {
+  const feed = await feedDao.getFeedById(feedId);
+  if (!feed) {
+    throw new Error('Post does not exist');
+  }
+  if (feed.user_id !== userId) {
+    throw new Error('User does not match the post id');
+  }
+  await feedDao.deleteFeed(userId, feedId);
+  return { message: 'Feed successfully deleted.' };
+};
 
 module.exports = {
   getAllFeed,
